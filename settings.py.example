@@ -1,0 +1,10 @@
+# The discord bot token required to start the bot and interact with the API
+TOKEN = ''
+
+# Database settings
+MARIADB_USER = ''
+MARIADB_PASSWORD = ''
+MARIADB_HOSTNAME = ''
+MARIADB_BYES_DB = ''
+MARIADB_BYES_TABLE = ''
+
