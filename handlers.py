@@ -1,7 +1,6 @@
-"""Holds handles for regexps defined in vipper2.DISPATCH_TABLE.
+"""Holds handles for regexps defined in api.DISPATCH_TABLE.
 
-Each of these functions is called when the message matches the listed
-regexp.
+Each of these functions is called when the message matches the listed regexp.
 """
 import re
 
