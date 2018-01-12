@@ -41,10 +41,12 @@ def on_message(message):
         username=message.author,
         message=message.content))
 
+
     # test regexps in dispatch table
-    for regexp, handler in api.DISPATCH_TABLE.items():
-        if re.match(regexp, message.content) and message.author != CLIENT.user:
-            yield from handler(CLIENT, message)
+    if message.author != CLIENT.user:
+        for regexp, args, handler in api.DISPATCH_TABLE:
+            if re.match(regexp, message.content, *args):
+                yield from handler(CLIENT, message)
     
     
 def main():

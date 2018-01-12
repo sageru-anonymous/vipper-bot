@@ -3,6 +3,8 @@
 Each of these functions is called when the message matches the listed
 regexp.
 """
+import re
+
 from sqlalchemy import create_engine
 
 import api
@@ -18,7 +20,7 @@ BYES_ENGINE = create_engine('mysql://{user}:{passwd}@{hostname}/{dbname}'.format
 ))
 
 
-@api.bot_response('(.*)bye(.*)')
+@api.bot_response('(.*)bye(.*)', re.IGNORECASE)
 def handle_bye(client, message):
     """Handler for message containing bye. Responds with a random bye from the
     byes database table and adds the message to the database table if it doesn't
@@ -42,12 +44,13 @@ def handle_bye(client, message):
             table=settings.MARIADB_BYES_TABLE)
         cursor.execute(insert_query, message.content)
 
-    # Query a random bye
-    rand_query = 'SELECT bye FROM {table} ORDER BY RAND() LIMIT 1'.format(
-        table=settings.MARIADB_BYES_TABLE)
-    results = list(cursor.execute(rand_query))
-    
-    if results:
-        content = results.pop()[0]
-        yield from client.send_message(message.channel, content)
+    # Query a random bye if message is just 'bye'
+    if message.content.lower() == 'bye':
+        rand_query = 'SELECT bye FROM {table} ORDER BY RAND() LIMIT 1'.format(
+            table=settings.MARIADB_BYES_TABLE)
+        results = list(cursor.execute(rand_query))
+        
+        if results:
+            content = results.pop()[0]
+            yield from client.send_message(message.channel, content)
 
