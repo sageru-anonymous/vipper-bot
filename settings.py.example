@@ -1,6 +1,9 @@
 # The discord bot token required to start the bot and interact with the API
 TOKEN = ''
 
+# Path to the avatar image
+AVATAR = 'avatar.png'
+
 # Database settings
 MARIADB_USER = ''
 MARIADB_PASSWORD = ''

@@ -48,7 +48,14 @@ def on_message(message):
             if re.match(regexp, message.content, *args):
                 yield from handler(CLIENT, message)
     
-    
+
+@CLIENT.event
+@asyncio.coroutine
+def on_ready():
+    with open(settings.AVATAR, 'rb') as avatar_file:
+        yield from CLIENT.edit_profile(avatar=avatar_file.read())
+
+                
 def main():
     CLIENT.run(settings.TOKEN)
 
