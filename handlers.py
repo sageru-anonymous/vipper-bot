@@ -19,7 +19,137 @@ BYES_ENGINE = create_engine('mysql://{user}:{passwd}@{hostname}/{dbname}'.format
 ))
 
 
-@api.bot_response('(.*)bye(.*)', re.IGNORECASE)
+@api.bot_response('^penis$')
+def handle_penis(client, message):
+    """Handler for message containing the string "penis". Replies by saying
+    "yes".
+
+    Args
+    ----
+    client : discord client
+    message : discord message
+    """
+    yield from client.send_message(message.channel, 'yes')
+
+
+@api.bot_response('^pump$')
+def handle_pump(client, message):
+    """Handler for message containing the string "pump". Replies by saying
+    "yes".
+
+    Args
+    ----
+    client : discord client
+    message : discord message
+    """
+    yield from client.send_message(message.channel, 'yes')
+
+
+@api.bot_response('^same$')
+def handle_same(client, message):
+    """Handler for message containing the string "same". Replies by saying same
+    as well.
+    
+    Args
+    ----
+    client : discord client
+    message : discord message
+    """
+    yield from client.send_message(message.channel, 'same')
+
+
+@api.bot_response('^nice$')
+def handle_nice(client, message):
+    """Handler for message containing the string "nice". Replies by saying nice
+    as well.
+    
+    Args
+    ----
+    client : discord client
+    message : discord message
+    """
+    yield from client.send_message(message.channel, 'nice')
+
+
+@api.bot_response(r'^o/$')
+def handle_cheer_right(client, message):
+    """Handler for message containing the string "o/". Replies by saying "\o".
+
+    Args
+    ----
+    client : discord client
+    message : discord message
+    """
+    yield from client.send_message(message.channel, '\o')
+
+
+
+@api.bot_response(r'^\\o$')
+def handle_cheer_left(client, message):
+    """Handler for message containing the string "\o". Replies by saying "o/".
+
+    Args
+    ----
+    client : discord client
+    message : discord message
+    """
+    yield from client.send_message(message.channel, 'o/')
+    
+
+
+@api.bot_response('^amirite$')
+def handle_amirite(client, message):
+    """Handler for message containing the string "amirite". Replies by saying
+    "yes".
+
+    Args
+    ----
+    client : discord client
+    message : discord message
+    """
+    yield from client.send_message(message.channel, 'yes')
+
+
+    
+@api.bot_response('^:3$')
+def handle_colonthree(client, message):
+    """Handler for message containing the string ":3". Replies by saying ":3"
+
+    Args
+    ----
+    client : discord client
+    message : discord message
+    """
+    yield from client.send_message(message.channel, ':3')
+
+
+@api.bot_response('^jews$')
+def handle_jews(client, message):
+    """Handler for message containing the string "jews". Replies by saying
+    "did wtc".
+
+    Args
+    ----
+    client : discord client
+    message : discord message
+    """
+    yield from client.send_message(message.channel, 'did wtc')
+
+
+@api.bot_response('^cocks$')
+def handle_jews(client, message):
+    """Handler for message containing the string "cocks". Replies by saying
+    "ill suck em".
+
+    Args
+    ----
+    client : discord client
+    message : discord message
+    """
+    yield from client.send_message(message.channel, 'ill suck em')
+
+    
+@api.bot_response('^(.*)bye(.*)$', re.IGNORECASE)
 def handle_bye(client, message):
     """Handler for message containing bye. Responds with a random bye from the
     byes database table and adds the message to the database table if it doesn't
