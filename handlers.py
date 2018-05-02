@@ -10,15 +10,6 @@ import api
 import settings
 
 
-# SQL Alchemy Engine for the Byes Databases. Used by the byes handler
-BYES_ENGINE = create_engine('mysql://{user}:{passwd}@{hostname}/{dbname}'.format(
-    user=settings.MARIADB_USER,
-    passwd=settings.MARIADB_PASSWORD,
-    hostname=settings.MARIADB_HOSTNAME,
-    dbname=settings.MARIADB_BYES_DB
-))
-
-
 @api.bot_response('^penis$')
 def handle_penis(client, message):
     """Handler for message containing the string "penis". Replies by saying
@@ -149,7 +140,7 @@ def handle_jews(client, message):
     yield from client.send_message(message.channel, 'ill suck em')
 
     
-@api.bot_response('^(.*)bye(.*)$', re.IGNORECASE)
+@api.bot_response('^(.*)(bye|no)(.*)$', re.IGNORECASE)
 def handle_bye(client, message):
     """Handler for message containing bye. Responds with a random bye from the
     byes database table and adds the message to the database table if it doesn't
@@ -160,26 +151,42 @@ def handle_bye(client, message):
     client : discord client
     message : discord message
     """
+    if 'bye' in message.content:
+        table = settings.MARIADB_BYES_TABLE
+    elif 'no' in message.content:
+        table = settings.MARIADB_NOS_TABLE
+    else:
+        return
+        
+    # SQL Alchemy Engine for the Byes Databases.
+    byes_engine = create_engine('mysql://{user}:{passwd}@{hostname}/{dbname}'
+                                .format(
+                                    user=settings.MARIADB_USER,
+                                    passwd=settings.MARIADB_PASSWORD,
+                                    hostname=settings.MARIADB_HOSTNAME,
+                                    dbname=settings.MARIADB_BYES_DB
+                                ))
+    cursor = byes_engine.connect()    
+
     # Add to database after checking for existence
     lookup_query = 'SELECT * FROM {table} WHERE bye = %s LIMIT 1'.format(
-        table=settings.MARIADB_BYES_TABLE)
-    
-    cursor = BYES_ENGINE.connect()
+        table=table)
     results = cursor.execute(lookup_query, message.content)
     row_exists = bool(list(results))
 
     if not row_exists:
         insert_query = 'INSERT INTO {table} (bye) VALUES (%s)'.format(
-            table=settings.MARIADB_BYES_TABLE)
+            table=table)
         cursor.execute(insert_query, message.content)
 
-    # Query a random bye if message is just 'bye'
-    if message.content.lower() == 'bye':
+    # Query a random bye if message is just 'bye' or 'no'
+    if message.content.lower() in ('no', 'bye'):
         rand_query = 'SELECT bye FROM {table} ORDER BY RAND() LIMIT 1'.format(
-            table=settings.MARIADB_BYES_TABLE)
+            table=table)
         results = list(cursor.execute(rand_query))
         
         if results:
             content = results.pop()[0]
             yield from client.send_message(message.channel, content)
 
+ 
