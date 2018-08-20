@@ -2,12 +2,35 @@
 
 Each of these functions is called when the message matches the listed regexp.
 """
+import random
 import re
 
 from sqlalchemy import create_engine
 
 import api
 import settings
+
+@api.bot_response('^!kill (.*)$')
+def handle_kill(client, message):
+    """Hi"""
+    rand_val = random.randint(1, 6)
+    target = message.content.split(' ')[1]
+    source = str(message.author).split('#')[0]
+    
+    if rand_val == 1:
+        yield from client.send_message(
+            message.channel,
+            "{source} rolled the die, and it landed on 1.... A dragon "
+            "eats {target}!"
+            .format(source=source, target=target)
+        )
+    else:
+        yield from client.send_message(
+            message.channel,
+            "{source} rolled the die, and it landed on {rand_val}. The dragon "
+            "eats him!"
+            .format(source=source, rand_val=rand_val)
+        )
 
 
 @api.bot_response('^penis$')
