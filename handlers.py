@@ -13,7 +13,13 @@ import settings
 
 @api.bot_response('^!kill (.*)$')
 def handle_kill(client, message):
-    """Hi"""
+    """Handler for !kill commmand. The Dragon Eats You Game.
+
+    Args
+    ----
+    client : discord client
+    message : discord message
+    """
     rand_val = random.randint(1, 6)
     target = message.content.split(' ')[1]
     source = str(message.author).split('#')[0]
