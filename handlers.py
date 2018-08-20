@@ -10,6 +10,7 @@ from sqlalchemy import create_engine
 import api
 import settings
 
+
 @api.bot_response('^!kill (.*)$')
 def handle_kill(client, message):
     """Hi"""
