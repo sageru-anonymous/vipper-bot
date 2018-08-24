@@ -5,10 +5,27 @@ Each of these functions is called when the message matches the listed regexp.
 import random
 import re
 
+from nltk.tokenize import word_tokenize
 from sqlalchemy import create_engine
 
 import api
 import settings
+
+@api.bot_response('^irc$')
+def handle_irc(client, message):
+    yield from client.send_message(message.channel, 'rip')
+                  
+
+
+@api.bot_response('^!timeout$')
+def handle_timeout(client, message):
+    target = str(message.author).split('#')[0]
+
+    yield from client.send_message(
+        message.channel,
+        "_puts {target} in time out_"
+        .format(target=target)
+    )
 
 
 @api.bot_response('^!kill (.*)$')
@@ -181,9 +198,11 @@ def handle_bye(client, message):
     client : discord client
     message : discord message
     """
-    if 'bye' in message.content:
+    tokens = [tok.lower() for tok in word_tokenize(message.content)]
+
+    if 'bye' in tokens:
         table = settings.MARIADB_BYES_TABLE
-    elif 'no' in message.content:
+    elif 'no' in tokens:
         table = settings.MARIADB_NOS_TABLE
     else:
         return
@@ -196,7 +215,7 @@ def handle_bye(client, message):
                                     hostname=settings.MARIADB_HOSTNAME,
                                     dbname=settings.MARIADB_BYES_DB
                                 ))
-    cursor = byes_engine.connect()    
+    cursor = byes_engine.connect()
 
     # Add to database after checking for existence
     lookup_query = 'SELECT * FROM {table} WHERE bye = %s LIMIT 1'.format(

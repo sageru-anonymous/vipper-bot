@@ -1,9 +1,9 @@
 FROM debian:latest
 
 RUN apt-get update && apt-get install python3-pip libmariadbclient-dev -y
+RUN pip3 install discord.py sqlalchemy mysqlclient nltk
 RUN apt-get clean
-
-RUN pip3 install discord.py sqlalchemy mysqlclient
+RUN python3 -c 'import nltk; nltk.download("punkt")'
 
 ADD . /vipper
 WORKDIR /vipper
