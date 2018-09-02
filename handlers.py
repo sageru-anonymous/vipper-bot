@@ -11,11 +11,36 @@ from sqlalchemy import create_engine
 import api
 import settings
 
+
+@api.bot_response('^piano$')
+def handle_piano(client, message):
+    yield from client.send_message(
+        message.channel,
+        '```  o    _______________\n'
+        ' /\_  _|             |\n'
+        '_\__`[_______________|\n'
+        '] [ \, ][         ][  ```'
+    )
+
+
+@api.bot_response('^babu$')
+def handle_babu(client, message):
+    repeat_num = random.randint(1, 5)
+    reply = 'babu' * repeat_num
+    yield from client.send_message(message.channel, reply)
+
+
+@api.bot_response('^w+$')
+def handle_w(client, message):
+    repeat_num = random.randint(1, 25)
+    reply = 'w' * repeat_num
+    yield from client.send_message(message.channel, reply)
+
+
 @api.bot_response('^irc$')
 def handle_irc(client, message):
     yield from client.send_message(message.channel, 'rip')
                   
-
 
 @api.bot_response('^!timeout$')
 def handle_timeout(client, message):
@@ -134,7 +159,6 @@ def handle_cheer_left(client, message):
     yield from client.send_message(message.channel, 'o/')
     
 
-
 @api.bot_response('^amirite$')
 def handle_amirite(client, message):
     """Handler for message containing the string "amirite". Replies by saying
@@ -146,7 +170,6 @@ def handle_amirite(client, message):
     message : discord message
     """
     yield from client.send_message(message.channel, 'yes')
-
 
     
 @api.bot_response('^:3$')
